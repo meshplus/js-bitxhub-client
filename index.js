@@ -1,17 +1,8 @@
-const { test_deployXVMContract, test_invokeXVMContract, test_invokeBVMContract } = require('./contract_test');
-const { test_register, test_login } = require('./role_test');
-const { test_sendTransaction, test_sendTransactionWithReceipt, test_getTransaction } = require('./transaction_test');
-const { test_tripledes } = require('./tripledes_test');
-
-test_deployXVMContract()
-test_invokeXVMContract()
-test_invokeBVMContract()
-
-test_register()
-test_login()
-
-test_sendTransaction()
-test_sendTransactionWithReceipt()
-test_getTransaction()
-
-test_tripledes()
+module.exports = {
+    Client:      require('./src/client/index'),
+    Transaction: require('./src/transaction/index'),
+    Block:       require('./src/block/index'),
+    PbType:      require('./src/rpc/pb_type'),
+    Config:      require('./src/config/config'),
+    TripleDES:   require('./src/crypto/tripledes')
+};

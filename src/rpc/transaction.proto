@@ -1,0 +1,42 @@
+syntax = "proto3";
+package Transaction;
+
+message TransactionData {
+    enum Type {
+        NORMAL = 0;
+        INVOKE = 1;
+        UPDATE = 2;
+        FREEZE = 3;
+        UNFREEZE = 4;
+    }
+    Type type = 1;
+    uint64 amount = 2;
+    enum VMType {
+        BVM = 0;
+        XVM = 1;
+    }
+    VMType vm_type = 3;
+    bytes payload = 4;
+    bytes extra = 5;
+}
+
+message InvokePayload {
+    string method = 1;
+    repeated Arg args = 2;
+}
+
+message Arg {
+    enum Type {
+        I32 = 0;
+        I64 = 1;
+        U32 = 2;
+        U64 = 3;
+        F32 = 4;
+        F64 = 5;
+        String = 6;
+        Bytes = 7;
+    }
+    Type type = 1;
+    bool is_array = 2;
+    bytes value = 3;
+}

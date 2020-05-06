@@ -1,0 +1,29 @@
+{
+  "name": "bitxhub-jssdk",
+  "version": "1.0.0",
+  "description": "Js-SDK for BitXHub",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm install && cd example && tap index.js --coverage-report=text-summary",
+    "build": "webpack"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.10"
+  },
+  "dependencies": {
+    "atob": "^2.1.2",
+    "crypto-js": "^4.0.0",
+    "google-protobuf": "^3.11.2",
+    "json-source-map": "^0.6.1",
+    "keccak256": "^1.0.0",
+    "nodeunit": "^0.11.3",
+    "pbjs": "0.0.14",
+    "protobufjs": "~6.8.8",
+    "tap": "^14.10.6"
+  },
+  "publishConfig": { "registry": "https://npm.pkg.github.com/" }
+}
