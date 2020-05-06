@@ -23,7 +23,6 @@ async function test_invokeXVMContract() {
 
     let contract = fs.readFileSync('./testdata/example.wasm');
     let address = await cli.DeployContract(contract);
-    // console.log('address', address);
 
     let receipt = await cli.InvokeContract(1, address, 'a', PbType.pbInt32(1), PbType.pbInt32(2));
     console.log('test_invokeXVMContract ---', receipt === '336')

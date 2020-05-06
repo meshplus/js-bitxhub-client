@@ -1,5 +1,5 @@
 const EC = require("elliptic").ec;
-const keccak256 = require('keccak256');
+const sha256 = require('js-sha256');
 const pb = require('../rpc/transaction_pb');
 
 class Transaction {
@@ -53,7 +53,7 @@ class Transaction {
     async sign(privateKey) {
         let needHashString = this.needHashString();
         let unHashedString = Buffer.from(needHashString);
-        let hashedString = keccak256(unHashedString);
+        let hashedString = sha256(unHashedString);
 
         let ec = new EC('p256');
         let keyPair = ec.keyFromPrivate(privateKey, 'hex');
@@ -62,13 +62,11 @@ class Transaction {
         let s = signature.s.toArray('be', 32);
         let v = signature.recoveryParam;
         this.signature = r.concat(s).concat(v);
-        // console.log('signature', this.signature)
         let keyPub = keyPair.getPublic();
         let h = [0x04];
-        let x = keyPub.x.toArray('be', 32);
-        let y = keyPub.y.toArray('be', 32);
+        let x = keyPub.getX().toArray('be', 32);
+        let y = keyPub.getY().toArray('be', 32);
         let publicKey = h.concat(x).concat(y);
-        // console.log('publicKey', publicKey);
         this.signature = this.signature.concat(publicKey);
     }
 }

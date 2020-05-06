@@ -1,6 +1,6 @@
 const { tx, contract } = require('../rpc/index');
 const EC = require("elliptic").ec;
-const keccak256 = require('keccak256');
+const sha256 = require('js-sha256');
 
 class Client {
     constructor(privateKey) {
@@ -10,7 +10,7 @@ class Client {
         let x = publicKey.getX().toArray();
         let y = publicKey.getY().toArray();
         let pubToHash = x.concat(y);
-        let pubHash = keccak256(pubToHash).toString('hex');
+        let pubHash = sha256(pubToHash).toString('hex');
         let address = pubHash.substring(pubHash.length - 40, pubHash.length);
 
         this.privateKey = privateKey;
