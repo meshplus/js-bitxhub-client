@@ -1,6 +1,6 @@
 {
-  "name": "bitxhub-jssdk",
-  "version": "1.0.0",
+  "name": "@meshplus/js-bitxhub-client",
+  "version": "1.0.0-rc1",
   "description": "Js-SDK for BitXHub",
   "main": "index.js",
   "scripts": {
@@ -25,5 +25,5 @@
     "protobufjs": "~6.8.8",
     "tap": "^14.10.6"
   },
-  "publishConfig": { "registry": "https://npm.pkg.github.com/" }
+  "publishConfig": { "registry": "https://npm.pkg.github.com" }
 }
