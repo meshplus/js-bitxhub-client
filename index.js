@@ -4,5 +4,6 @@ module.exports = {
     Block:       require('./src/block/index'),
     PbType:      require('./src/rpc/pb_type'),
     Config:      require('./src/config/config'),
-    TripleDES:   require('./src/crypto/tripledes')
+    TripleDES:   require('./src/crypto/tripledes'),
+    AES:         require('./src/crypto/aes'),
 };

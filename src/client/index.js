@@ -4,7 +4,7 @@ const sha256 = require('js-sha256');
 
 class Client {
     constructor(privateKey) {
-        let ec = new EC('p256');
+        let ec = new EC('secp256k1');
         let keyPair = ec.keyFromPrivate(privateKey);
         let publicKey = keyPair.getPublic();
         let x = publicKey.getX().toArray();
