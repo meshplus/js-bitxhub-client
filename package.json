@@ -15,11 +15,15 @@
     "webpack-cli": "^3.3.10"
   },
   "dependencies": {
+    "asn1": "^0.2.4",
+    "asn1.js": "^5.4.1",
     "atob": "^2.1.2",
     "crypto-js": "^4.0.0",
     "google-protobuf": "^3.11.2",
     "js-sha256": "^0.9.0",
     "json-source-map": "^0.6.1",
+    "jsrsasign": "^9.1.9",
+    "jsrsasign-util": "^1.0.0",
     "keccak256": "^1.0.0",
     "nodeunit": "^0.11.3",
     "pbjs": "0.0.14",

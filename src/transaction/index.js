@@ -1,6 +1,8 @@
 const EC = require("elliptic").ec;
 const sha256 = require('js-sha256');
 const pb = require('../rpc/transaction_pb');
+const Ber = require('asn1').Ber;
+const jsrsasign = require('jsrsasign')
 
 class Transaction {
     constructor () {
@@ -55,19 +57,48 @@ class Transaction {
         let unHashedString = Buffer.from(needHashString);
         let hashedString = sha256(unHashedString);
 
-        let ec = new EC('p256');
+        console.log('hashedString：', hashedString);
+        let ec = new EC('secp256k1');
         let keyPair = ec.keyFromPrivate(privateKey, 'hex');
         let signature = keyPair.sign(hashedString);
-        let r = signature.r.toArray('be', 32);
-        let s = signature.s.toArray('be', 32);
-        let v = signature.recoveryParam;
-        this.signature = r.concat(s).concat(v);
+        // let r = signature.r.toArray('be', 32);
+        // let s = signature.s.toArray('be', 32);
+        let r = signature.r.toBuffer();
+        let s = signature.s.toBuffer();
+        // let v = signature.recoveryParam;
+        // this.signature = r.concat(s).concat(v);
         let keyPub = keyPair.getPublic();
-        let h = [0x04];
-        let x = keyPub.getX().toArray('be', 32);
-        let y = keyPub.getY().toArray('be', 32);
-        let publicKey = h.concat(x).concat(y);
-        this.signature = this.signature.concat(publicKey);
+        let publicKey = Buffer.from(keyPub.encodeCompressed());
+        // let h = [0x04];
+        // let x = keyPub.getX().toArray('be', 32);
+        // let y = keyPub.getY().toArray('be', 32);
+        // let publicKey = h.concat(x).concat(y);
+        console.log('publicKey：', publicKey)
+        // console.log('r：', r)
+        // console.log('s：', s)
+
+        const writer = new Ber.Writer();
+        writer.startSequence();
+        writer.writeBuffer(publicKey, 2);
+        writer.writeBuffer(r, 2);
+        writer.writeBuffer(s, 2);
+        writer.endSequence();
+        console.log('js：', writer.buffer);
+        // this.signature = this.signature.concat(publicKey);
+        // let tmp = jsrsasign.KJUR.crypto.ECDSA.biRSSigToASN1Sig(signature.r, signature.s)
+
+        // const ASN1 = jsrsasign.KJUR.asn1;
+        // let newobj = new ASN1.DERSequence({
+        //     'array': [
+        //         new ASN1.DERUTF8String({'str': publicKey}),
+        //         new ASN1.DERInteger({'bigint': signature.r}),
+        //         new ASN1.DERInteger({'bigint': signature.s})
+        //     ]
+        // });
+        // console.log(newobj.getEncodedHex())
+
+        let goBuffer = Buffer.from('MGcEIQIsTclDuLtXSniiMHkPRf7i01Du1O3gfzVGeuedcv5xqwIgYaQyTcGQSbHsHXs6kygK4pTa1WUpQ7q6GNmjGyLzv7gCIF/5dQkmlpewiz/KY99LfsJwMMGJ5BoyGIvUm3oZT3Zc', 'base64');
+        console.log('go：', goBuffer);
     }
 }
 

@@ -4,7 +4,7 @@ const fs = require('fs');
 
 async function test_deployXVMContract() {
 
-    let ec = new EC('p256');
+    let ec = new EC('secp256k1');
     let keyPair = ec.genKeyPair();
     let privateKey = keyPair.getPrivate().toString('hex').toLowerCase();
     let cli = new Client(privateKey);
@@ -16,7 +16,7 @@ async function test_deployXVMContract() {
 
 async function test_invokeXVMContract() {
 
-    let ec = new EC('p256');
+    let ec = new EC('secp256k1');
     let keyPair = ec.genKeyPair();
     let privateKey = keyPair.getPrivate().toString('hex').toLowerCase();
     let cli = new Client(privateKey);
@@ -30,7 +30,7 @@ async function test_invokeXVMContract() {
 
 async function test_invokeBVMContract() {
 
-    let ec = new EC('p256');
+    let ec = new EC('secp256k1');
     let keyPair = ec.genKeyPair();
     let privateKey = keyPair.getPrivate().toString('hex').toLowerCase();
     let cli = new Client(privateKey);
