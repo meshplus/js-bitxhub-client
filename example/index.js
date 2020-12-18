@@ -4,16 +4,16 @@ const { test_sendTransaction, test_sendTransactionWithReceipt, test_getTransacti
 const { test_tripledes } = require('./tripledes_test');
 const { test_aes } = require('./aes_test');
 
-test_deployXVMContract()
-test_invokeXVMContract()
-test_invokeBVMContract()
+// test_deployXVMContract()
+// test_invokeXVMContract()
+// test_invokeBVMContract()
 
 test_register()
-test_login()
+// test_login()
 
-test_sendTransaction()
-test_sendTransactionWithReceipt()
-test_getTransaction()
+// test_sendTransaction()
+// test_sendTransactionWithReceipt()
+// test_getTransaction()
 
-test_tripledes()
-test_aes()
+// test_tripledes()
+// test_aes()

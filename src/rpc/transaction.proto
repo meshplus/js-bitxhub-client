@@ -1,5 +1,48 @@
 syntax = "proto3";
-package Transaction;
+
+package rpc;
+
+message Transaction {
+    bytes version = 1;
+    bytes from = 2 ;
+    bytes to = 3 ;
+    int64 timestamp = 4 [jstype = JS_STRING];
+    bytes transaction_hash = 5;
+    bytes payload = 6;
+    IBTP IBTP = 7;
+    uint64 nonce = 8 [jstype = JS_STRING];
+    uint64 amount  = 9 [jstype = JS_STRING];
+    bytes signature = 10;
+    bytes extra = 11;
+}
+
+message ContractTransaction {
+    bytes from = 2 ;
+    bytes to = 3 ;
+    int64 timestamp = 4 [jstype = JS_STRING];
+    bytes payload = 6;
+    uint64 nonce = 8 [jstype = JS_STRING];
+    uint64 amount  = 9 [jstype = JS_STRING];
+}
+
+message IBTPTransaction {
+    bytes from = 2 ;
+    bytes to = 3 ;
+    int64 timestamp = 4 [jstype = JS_STRING];
+    IBTP IBTP = 7;
+    uint64 nonce = 8 [jstype = JS_STRING];
+    uint64 amount  = 9 [jstype = JS_STRING];
+}
+
+message Address {
+    bytes raw_address = 1;
+    string address = 2;
+}
+
+message Hash {
+    bytes raw_hash = 1;
+    string hash = 2;
+}
 
 message TransactionData {
     enum Type {
@@ -25,6 +68,61 @@ message InvokePayload {
     repeated Arg args = 2;
 }
 
+message Transactions {
+    repeated Transaction transactions = 1;
+}
+
+message TransactionMeta {
+    bytes block_hash = 1;
+    uint64 block_height = 2;
+    uint64 index = 3;
+}
+
+message CrosschainTransactionExtra {
+    uint64 index = 1; // to_id index
+    bool status = 2; // receipt status
+    bytes ret = 3; // receipt result
+}
+
+message TransactionTracingMeta {
+    bytes receipt_hash = 1;
+    bytes confirm_hash = 2;
+}
+
+message TransactionSlice {
+    uint64 height = 1;
+    repeated Transaction txs = 2;
+}
+
+message AssetExchangeInfo {
+    string id = 1;
+    string sender_on_src = 2;
+    string receiver_on_src = 3;
+    uint64 asset_on_src = 4;
+    string sender_on_dst = 5;
+    string receiver_on_dst = 6;
+    uint64 asset_on_dst = 7;
+}
+
+enum TransactionStatus {
+    BEGIN = 0;
+    SUCCESS = 1;
+    FAILURE = 2;
+    ROLLBACK = 3;
+}
+
+enum AssetExchangeStatus {
+    INIT = 0;
+    REDEEM = 1;
+    REFUND = 2;
+}
+
+message TransactionRecord {
+    uint64 height = 1;
+    TransactionStatus status = 2;
+}
+
+
 message Arg {
     enum Type {
         I32 = 0;
@@ -35,8 +133,68 @@ message Arg {
         F64 = 5;
         String = 6;
         Bytes = 7;
+        Bool = 8;
     }
     Type type = 1;
     bool is_array = 2;
     bytes value = 3;
+}
+
+
+// Inter-blockchain Transfer Protocol
+message IBTP {
+    enum Type {
+        INTERCHAIN = 0;
+        RECEIPT_SUCCESS = 1;
+        RECEIPT_FAILURE = 2;
+        ROLLBACK = 3;
+        ASSET_EXCHANGE_INIT = 4;
+        ASSET_EXCHANGE_REDEEM = 5;
+        ASSET_EXCHANGE_REFUND = 6;
+        ASSET_EXCHANGE_RECEIPT = 7;
+    }
+
+    enum Category {
+        REQUEST = 0;
+        RESPONSE = 1;
+        UNKNOWN = 2;
+    }
+
+    // ID of sending chain
+    string from = 1;
+    // ID of receiving chain
+    string to = 2;
+    // Index of inter-chain transaction
+    uint64 index = 3;
+    // inter-chain transaction type
+    Type type = 4;
+    // Timestamp of inter-chain events
+    int64 timestamp = 5;
+    // Proof of inter-chain transactions
+    bytes proof = 6;
+    // Encoded content used by inter-chain
+    bytes payload = 7;
+    // info about other txs in the same group
+    map<string, uint64> group = 8;
+    // Message version
+    string version = 9;
+    // Self-defined fields used by app-chain
+    bytes extra = 10;
+}
+
+message payload {
+    bool encrypted = 1;
+    bytes content = 2;
+}
+
+message content {
+    string src_contract_id = 1;
+    string dst_contract_id = 2;
+    string func = 3;
+    repeated bytes args = 4;
+    string callback = 5;
+}
+
+message IBTPs {
+    repeated IBTP ibtps = 1;
 }
