@@ -33,13 +33,19 @@ async function invokeContract(vmType, address, method, ...args) {
     td.setPayload(payload);
 
     let tx = new Transaction();
-    tx.from = cli.address;
-    tx.to = address;
-    tx.data = td;
+    let from = new pb.Address();
+    tx.tx.setFrom("0x" + this.address);
+    tx.tx.setTo("0x" + address);
+    // tx.data = td;
+    // tx.data = td.toObject();
+    // tx.payload = JSON.stringify(td.toObject());
+    // tx.payload = Buffer.from('111');
+    tx.tx.setPayload(td.serializeBinary());
     await tx.sign(cli.privateKey);
-    tx.data = td.toObject();
+    let transaction = tx.tx.toObject();
+    delete transaction.transactionHash;
 
-    let receipt = await cli.SendTransactionWithReceipt(tx);
+    let receipt = await cli.SendTransactionWithReceipt(transaction);
     if (receipt.ret) {
         let buffer = Buffer.from(receipt.ret, 'base64');
         return buffer.toString();
@@ -49,7 +55,7 @@ async function invokeContract(vmType, address, method, ...args) {
 
 // Decode from base64 and Convert from utf8 to utf-16
 function b64DecodeUnicode(str) {
-    return decodeURIComponent(atob(str).split('').map(function(c) {
+    return decodeURIComponent(atob(str).split('').map(function (c) {
         return ('00' + c.charCodeAt(0).toString(16)).slice(-2);
     }).join(''));
 }

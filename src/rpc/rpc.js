@@ -1,5 +1,6 @@
-const http   = require('http');
+const http = require('http');
 let config = require('../config/config');
+const pb = require('./transaction_pb');
 
 // Get Random Integer
 function getRndInteger(min, max) {
@@ -28,11 +29,12 @@ function doRequest(options, payload) {
                 data += chunk;
             });
             res.on('end', function () {
+                console.log(data)
                 resolve(JSON.parse(data));
             });
         });
         if (options.method === 'post') {
-            // console.log(JSON.stringify(payload))
+            console.log(payload);
             req.write(JSON.stringify(payload));
         }
         req.on('error', function (e) {
