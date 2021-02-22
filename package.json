@@ -1,6 +1,6 @@
 {
   "name": "@meshplus/js-bitxhub-client",
-  "version": "1.0.0-rc2",
+  "version": "1.4.1",
   "description": "Js-SDK for BitXHub",
   "main": "index.js",
   "scripts": {
