@@ -1,7 +1,6 @@
 const EC = require("elliptic").ec;
 const sha256 = require('js-sha256');
 const pb = require('../rpc/transaction_pb');
-const secp256k1 = require('secp256k1');
 const hexToArrayBuffer = require('hex-to-array-buffer');
 const Timestamp = require("timestamp-nano");
 

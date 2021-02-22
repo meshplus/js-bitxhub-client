@@ -41,6 +41,9 @@ async function invokeContract(vmType, address, method, ...args) {
     // tx.payload = JSON.stringify(td.toObject());
     // tx.payload = Buffer.from('111');
     tx.tx.setPayload(td.serializeBinary());
+    nonce = await cli.GetPendingNonce();
+    console.log("nonce-----" + nonce);
+    tx.tx.setNonce(nonce);
     await tx.sign(cli.privateKey);
     let transaction = tx.tx.toObject();
     delete transaction.transactionHash;

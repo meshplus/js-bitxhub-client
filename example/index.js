@@ -8,8 +8,8 @@ const { test_aes } = require('./aes_test');
 // test_invokeXVMContract()
 // test_invokeBVMContract()
 
-test_register()
-// test_login()
+// test_register()
+test_login()
 
 // test_sendTransaction()
 // test_sendTransactionWithReceipt()

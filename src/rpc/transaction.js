@@ -6,13 +6,32 @@ async function sendTX(transaction) {
     return await rpc.doRequest(optObj, transaction);
 }
 
+async function sendView(transaction) {
+    let optObj = await rpc.setOptions('post', '/v1/view');
+    return await rpc.doRequest(optObj, transaction);
+}
+
+async function getPendingNonce(address) {
+    console.log(address);
+    let optObj = await rpc.setOptions('get', '/v1/pendingNonce/' + address)
+    let ret = await rpc.doRequest(optObj);
+    return Buffer.from(ret.data, 'base64').toString();
+}
+
 // Send Transaction & Get Receipt
 async function sendTransactionWithReceipt(transaction) {
+    console.log(transaction)
     let hash = await this.sendTX(transaction);
-    let res = await this.getReceipt(hash.tx_hash)
+    let res = await this.getReceipt(hash.tx_hash);
     let start = new Date();
-    while (res.code && (new Date() - start < 1000 * 5)) {
-        res = await this.getReceipt(hash.tx_hash)
+    let former = start;
+    while (res.code && (former - start < 1000 * 5)) {
+        let now = new Date();
+        if (now - former < 100) {
+            continue;
+        }
+        former = now;
+        res = await this.getReceipt(hash.tx_hash);
     }
 
     return res;
@@ -36,7 +55,7 @@ async function getTransaction(hash) {
 
 // Decode from base64 and Convert from utf8 to utf-16
 function b64DecodeUnicode(str) {
-    return decodeURIComponent(atob(str).split('').map(function(c) {
+    return decodeURIComponent(atob(str).split('').map(function (c) {
         return ('00' + c.charCodeAt(0).toString(16)).slice(-2);
     }).join(''));
 }
@@ -50,5 +69,6 @@ module.exports = {
     sendTX,
     sendTransactionWithReceipt,
     getReceipt,
+    getPendingNonce,
     getTransaction,
 };

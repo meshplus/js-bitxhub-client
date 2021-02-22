@@ -24,9 +24,9 @@ async function test_register() {
 
 async function test_login() {
 
-    let key = fs.readFileSync('./testdata/key').toString();
-    let priv = JSON.parse(key).private_key;
-    let decrypted = TripleDES.decrypt(priv, 'bitxhub' + 'abcdefghijklmnopqrstuvwxyz')
+    let key = fs.readFileSync('./testdata/key.json').toString();
+    let priv = JSON.parse(key).cipher.data;
+    let decrypted = AES.decrypt(priv, 'bitxhub')
 
     let cli = new Client(decrypted);
     let receipt = await cli.InvokeContract(0, '000000000000000000000000000000000000000d', 'GetRole')

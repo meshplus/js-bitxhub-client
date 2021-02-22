@@ -1,22 +1,14 @@
 const { tx, contract } = require('../rpc/index');
-const EC = require("elliptic").ec;
-const sha256 = require('js-sha256');
-const keccak256 = require('keccak256')
+const Web3 = require('web3');
 
 class Client {
     constructor(privateKey) {
-        let ec = new EC('secp256k1');
-        let keyPair = ec.keyFromPrivate(privateKey);
-        let publicKey = keyPair.getPublic();
-        let x = publicKey.getX().toArray();
-        let y = publicKey.getY().toArray();
-        let pubToHash = x.concat(y);
-        let pubHash = keccak256(pubToHash).toString('hex');
-        let address = pubHash.slice(-40);
+        var web3 = new Web3(Web3.givenProvider);
+        let account = web3.eth.accounts.privateKeyToAccount(privateKey);
 
         this.privateKey = privateKey;
-        this.publicKey = publicKey.encode('hex');
-        this.address = address;
+        this.address = account.address.slice(2);
+        console.log(this.address);
     }
 
     SendTransaction(transaction) {
@@ -30,6 +22,9 @@ class Client {
     }
     GetTransaction(hash) {
         return tx.getTransaction(hash);
+    }
+    GetPendingNonce() {
+        return tx.getPendingNonce("0x" + this.address);
     }
     // SyncBlock () {}
 
