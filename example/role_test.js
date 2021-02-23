@@ -28,9 +28,15 @@ async function test_login() {
     let priv = JSON.parse(key).cipher.data;
     let decrypted = AES.decrypt(priv, 'bitxhub')
 
-    let cli = new Client(decrypted);
-    let receipt = await cli.InvokeContract(0, '000000000000000000000000000000000000000d', 'GetRole')
-    console.log('test_login ---', receipt)
+    try {
+        let cli = new Client(decrypted);
+        let ret = await cli.GetNewBlocks(8);
+        console.log(ret);
+        let receipt = await cli.InvokeContract(0, '000000000000000000000000000000000000000e', 'CountApprovedAppchains')
+        console.log('test_login ---', receipt)
+    } catch (err) {
+        console.log(err)
+    }
 }
 
 module.exports = {

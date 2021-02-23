@@ -1,10 +1,10 @@
 const { tx, contract } = require('../rpc/index');
-const Web3 = require('web3');
+const Accounts = require('web3-eth-accounts');
 
 class Client {
     constructor(privateKey) {
-        var web3 = new Web3(Web3.givenProvider);
-        let account = web3.eth.accounts.privateKeyToAccount(privateKey);
+        var accounts = new Accounts(null);
+        let account = accounts.privateKeyToAccount(privateKey);
 
         this.privateKey = privateKey;
         this.address = account.address.slice(2);
@@ -26,6 +26,13 @@ class Client {
     GetPendingNonce() {
         return tx.getPendingNonce("0x" + this.address);
     }
+    GetChainMeta() {
+        return tx.getChainMeta();
+    }
+    GetBlocks(start, end) {
+        return tx.getBlocks(start, end);
+    }
+
     // SyncBlock () {}
 
     DeployContract(ctx) {

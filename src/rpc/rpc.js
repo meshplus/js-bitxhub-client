@@ -29,16 +29,13 @@ function doRequest(options, payload) {
                 data += chunk;
             });
             res.on('end', function () {
-                console.log(data)
                 resolve(JSON.parse(data));
             });
         });
         if (options.method === 'post') {
-            console.log(payload);
             req.write(JSON.stringify(payload));
         }
         req.on('error', function (e) {
-            console.log('ERROR?: ' + e.message);
             reject(e.message);
         });
         req.end();

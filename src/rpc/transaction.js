@@ -12,10 +12,21 @@ async function sendView(transaction) {
 }
 
 async function getPendingNonce(address) {
-    console.log(address);
     let optObj = await rpc.setOptions('get', '/v1/pendingNonce/' + address)
     let ret = await rpc.doRequest(optObj);
     return Buffer.from(ret.data, 'base64').toString();
+}
+
+async function getChainMeta() {
+    let optObj = await rpc.setOptions('get', '/v1/chain_meta')
+    let ret = await rpc.doRequest(optObj);
+    return ret;
+}
+
+async function getBlocks(start, end) {
+    let optObj = await rpc.setOptions('get', '/v1/blocks?start=' + start + '&end=' + end);
+    let ret = await rpc.doRequest(optObj);
+    return ret;
 }
 
 // Send Transaction & Get Receipt
@@ -27,7 +38,7 @@ async function sendTransactionWithReceipt(transaction) {
     let former = start;
     while (res.code && (former - start < 1000 * 5)) {
         let now = new Date();
-        if (now - former < 100) {
+        if (now - former < 200) {
             continue;
         }
         former = now;
@@ -70,5 +81,7 @@ module.exports = {
     sendTransactionWithReceipt,
     getReceipt,
     getPendingNonce,
+    getChainMeta,
     getTransaction,
+    getBlocks,
 };
