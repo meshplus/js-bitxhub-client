@@ -3,14 +3,23 @@ const Accounts = require('web3-eth-accounts');
 
 class Client {
     constructor(privateKey) {
-        var accounts = new Accounts(null);
-        let account = accounts.privateKeyToAccount(privateKey);
+        let accounts = new Accounts(null);
+        if (privateKey) {
+            let account = accounts.privateKeyToAccount(privateKey);
 
-        this.privateKey = privateKey;
-        this.address = account.address.slice(2);
-        console.log(this.address);
+            this.privateKey = privateKey;
+            this.address = account.address.slice(2);
+        } else {
+            let account = accounts.create();
+
+            this.privateKey = account.privateKey.slice(2);
+            this.address = account.address.slice(2);
+        }
     }
 
+    Address() {
+        return "0x" + this.address;
+    }
     SendTransaction(transaction) {
         return tx.sendTX(transaction);
     }
@@ -32,7 +41,9 @@ class Client {
     GetBlocks(start, end) {
         return tx.getBlocks(start, end);
     }
-
+    GetBlock(type, value) {
+        return tx.getBlock(type, value);
+    }
     // SyncBlock () {}
 
     DeployContract(ctx) {
