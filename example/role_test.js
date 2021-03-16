@@ -1,6 +1,7 @@
 const { AES, Client, PbType } = require('../index');
 const fs = require('fs');
 const hexToArrayBuffer = require('hex-to-array-buffer');
+const utils  = require("web3-utils");
 
 async function test_register() {
 

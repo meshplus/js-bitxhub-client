@@ -29,16 +29,21 @@ async function getBlocks(start, end) {
     return ret;
 }
 
+async function getBlock(type, value) {
+    let optObj = await rpc.setOptions('get', '/v1/block?type=' + type + '&value=' + value);
+    let ret = await rpc.doRequest(optObj);
+    return ret;
+}
+
 // Send Transaction & Get Receipt
 async function sendTransactionWithReceipt(transaction) {
-    console.log(transaction)
     let hash = await this.sendTX(transaction);
     let res = await this.getReceipt(hash.tx_hash);
     let start = new Date();
     let former = start;
     while (res.code && (former - start < 1000 * 5)) {
         let now = new Date();
-        if (now - former < 200) {
+        if (now - former < 300) {
             continue;
         }
         former = now;
@@ -84,4 +89,5 @@ module.exports = {
     getChainMeta,
     getTransaction,
     getBlocks,
+    getBlock,
 };

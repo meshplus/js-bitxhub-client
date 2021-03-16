@@ -1,5 +1,7 @@
 const pb = require('./transaction_pb');
 const Transaction = require('../transaction/index');
+const utils = require('web3-utils');
+
 
 async function deployContract(contract) {
     const cli = this;
@@ -10,13 +12,21 @@ async function deployContract(contract) {
     td.setPayload(contract);
 
     let tx = new Transaction();
-    tx.from = cli.address;
-    tx.data = td;
+    tx.tx.setFrom("0x" + this.address);
+    tx.tx.setTo("0x0000000000000000000000000000000000000000");
+    tx.tx.setPayload(td.serializeBinary());
+    nonce = await cli.GetPendingNonce();
+    tx.tx.setNonce(nonce);
     await tx.sign(cli.privateKey);
-    tx.data = td.toObject();
+    let transaction = tx.tx.toObject();
+    delete transaction.transactionHash;
 
-    let receipt = await cli.SendTransactionWithReceipt(tx);
-    return b64DecodeUnicode(receipt.ret);
+    let receipt = await cli.SendTransactionWithReceipt(transaction);
+    if (receipt.ret) {
+        let buffer = Buffer.from(receipt.ret, 'base64');
+        return utils.toChecksumAddress(utils.bytesToHex(buffer));
+    }
+    return '';
 }
 
 async function invokeContract(vmType, address, method, ...args) {
@@ -33,16 +43,10 @@ async function invokeContract(vmType, address, method, ...args) {
     td.setPayload(payload);
 
     let tx = new Transaction();
-    let from = new pb.Address();
     tx.tx.setFrom("0x" + this.address);
     tx.tx.setTo("0x" + address);
-    // tx.data = td;
-    // tx.data = td.toObject();
-    // tx.payload = JSON.stringify(td.toObject());
-    // tx.payload = Buffer.from('111');
     tx.tx.setPayload(td.serializeBinary());
     nonce = await cli.GetPendingNonce();
-    console.log("nonce-----" + nonce);
     tx.tx.setNonce(nonce);
     await tx.sign(cli.privateKey);
     let transaction = tx.tx.toObject();
@@ -66,6 +70,14 @@ function b64DecodeUnicode(str) {
 // Turns Base64-encoded Ascii Data Back to Binary
 function atob(str) {
     return Buffer.from(str, 'base64').toString('binary');
+}
+
+function strToHexCharCode(str) {
+    if (str === "") return "";
+    var hexCharCode = [];
+    hexCharCode.push("0x");
+    for (var i = 0; i < str.length; i++) { hexCharCode.push((str.charCodeAt(i)).toString(16)); }
+    return hexCharCode.join("");
 }
 
 module.exports = {
