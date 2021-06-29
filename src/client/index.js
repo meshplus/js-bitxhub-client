@@ -26,6 +26,12 @@ class Client {
     SendTransactionWithReceipt(transaction) {
         return tx.sendTransactionWithReceipt(transaction);
     }
+    SendViewWithReceipt(transaction) {
+        return tx.sendViewWithReceipt(transaction);
+    }
+    SendView(transaction) {
+        return tx.sendView(transaction);
+    }
     GetReceipt(hash) {
         return tx.getReceipt(hash);
     }
@@ -51,6 +57,9 @@ class Client {
     }
     InvokeContract(vmType, address, method, ...args) {
         return contract.invokeContract.call(this, vmType, address, method, ...args);
+    }
+    InvokeView(vmType, address, method, ...args) {
+        return contract.invokeView.call(this, vmType, address, method, ...args);
     }
 }
 

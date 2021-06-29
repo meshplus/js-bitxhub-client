@@ -477,7 +477,7 @@ proto.rpc.Transaction.toObject = function(includeInstance, msg) {
     payload: msg.getPayload_asB64(),
     ibtp: (f = msg.getIbtp()) && proto.rpc.IBTP.toObject(includeInstance, f),
     nonce: jspb.Message.getFieldWithDefault(msg, 8, "0"),
-    amount: jspb.Message.getFieldWithDefault(msg, 9, ""),
+    amount: jspb.Message.getFieldWithDefault(msg, 9, "0"),
     signature: msg.getSignature_asB64(),
     extra: msg.getExtra_asB64()
   };
@@ -550,7 +550,7 @@ proto.rpc.Transaction.deserializeBinaryFromReader = function(msg, reader) {
       msg.setNonce(value);
       break;
     case 9:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readUint64String());
       msg.setAmount(value);
       break;
     case 10:
@@ -648,8 +648,8 @@ proto.rpc.Transaction.serializeBinaryToWriter = function(message, writer) {
     );
   }
   f = message.getAmount();
-  if (f.length > 0) {
-    writer.writeString(
+  if (parseInt(f, 10) !== 0) {
+    writer.writeUint64String(
       9,
       f
     );
@@ -955,11 +955,11 @@ proto.rpc.Transaction.prototype.setNonce = function(value) {
 
 
 /**
- * optional string amount = 9;
+ * optional uint64 amount = 9;
  * @return {string}
  */
 proto.rpc.Transaction.prototype.getAmount = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 9, ""));
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 9, "0"));
 };
 
 
@@ -968,7 +968,7 @@ proto.rpc.Transaction.prototype.getAmount = function() {
  * @return {!proto.rpc.Transaction} returns this
  */
 proto.rpc.Transaction.prototype.setAmount = function(value) {
-  return jspb.Message.setProto3StringField(this, 9, value);
+  return jspb.Message.setProto3StringIntField(this, 9, value);
 };
 
 
@@ -1093,7 +1093,7 @@ proto.rpc.ContractTransaction.toObject = function(includeInstance, msg) {
     timestamp: jspb.Message.getFieldWithDefault(msg, 4, "0"),
     payload: msg.getPayload_asB64(),
     nonce: jspb.Message.getFieldWithDefault(msg, 8, "0"),
-    amount: jspb.Message.getFieldWithDefault(msg, 9, "")
+    amount: jspb.Message.getFieldWithDefault(msg, 9, "0")
   };
 
   if (includeInstance) {
@@ -1151,7 +1151,7 @@ proto.rpc.ContractTransaction.deserializeBinaryFromReader = function(msg, reader
       msg.setNonce(value);
       break;
     case 9:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readUint64String());
       msg.setAmount(value);
       break;
     default:
@@ -1219,8 +1219,8 @@ proto.rpc.ContractTransaction.serializeBinaryToWriter = function(message, writer
     );
   }
   f = message.getAmount();
-  if (f.length > 0) {
-    writer.writeString(
+  if (parseInt(f, 10) !== 0) {
+    writer.writeUint64String(
       9,
       f
     );
@@ -1391,11 +1391,11 @@ proto.rpc.ContractTransaction.prototype.setNonce = function(value) {
 
 
 /**
- * optional string amount = 9;
+ * optional uint64 amount = 9;
  * @return {string}
  */
 proto.rpc.ContractTransaction.prototype.getAmount = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 9, ""));
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 9, "0"));
 };
 
 
@@ -1404,7 +1404,7 @@ proto.rpc.ContractTransaction.prototype.getAmount = function() {
  * @return {!proto.rpc.ContractTransaction} returns this
  */
 proto.rpc.ContractTransaction.prototype.setAmount = function(value) {
-  return jspb.Message.setProto3StringField(this, 9, value);
+  return jspb.Message.setProto3StringIntField(this, 9, value);
 };
 
 
@@ -1445,7 +1445,7 @@ proto.rpc.IBTPTransaction.toObject = function(includeInstance, msg) {
     timestamp: jspb.Message.getFieldWithDefault(msg, 4, "0"),
     ibtp: (f = msg.getIbtp()) && proto.rpc.IBTP.toObject(includeInstance, f),
     nonce: jspb.Message.getFieldWithDefault(msg, 8, "0"),
-    amount: jspb.Message.getFieldWithDefault(msg, 9, "")
+    amount: jspb.Message.getFieldWithDefault(msg, 9, "0")
   };
 
   if (includeInstance) {
@@ -1504,7 +1504,7 @@ proto.rpc.IBTPTransaction.deserializeBinaryFromReader = function(msg, reader) {
       msg.setNonce(value);
       break;
     case 9:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readUint64String());
       msg.setAmount(value);
       break;
     default:
@@ -1573,8 +1573,8 @@ proto.rpc.IBTPTransaction.serializeBinaryToWriter = function(message, writer) {
     );
   }
   f = message.getAmount();
-  if (f.length > 0) {
-    writer.writeString(
+  if (parseInt(f, 10) !== 0) {
+    writer.writeUint64String(
       9,
       f
     );
@@ -1740,11 +1740,11 @@ proto.rpc.IBTPTransaction.prototype.setNonce = function(value) {
 
 
 /**
- * optional string amount = 9;
+ * optional uint64 amount = 9;
  * @return {string}
  */
 proto.rpc.IBTPTransaction.prototype.getAmount = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 9, ""));
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 9, "0"));
 };
 
 
@@ -1753,7 +1753,7 @@ proto.rpc.IBTPTransaction.prototype.getAmount = function() {
  * @return {!proto.rpc.IBTPTransaction} returns this
  */
 proto.rpc.IBTPTransaction.prototype.setAmount = function(value) {
-  return jspb.Message.setProto3StringField(this, 9, value);
+  return jspb.Message.setProto3StringIntField(this, 9, value);
 };
 
 

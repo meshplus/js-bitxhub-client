@@ -20,12 +20,10 @@ class Transaction {
         this.tx.setIbtp(ibtp);
         this.tx.setAmount("111");
         this.tx.setExtra("");
-        console.log(this.tx.getPayload() === "");
     }
 
     // Get The Current Time Stamp in Nanoseconds
     getCurrentTimeStamp() {
-        console.log(Timestamp.fromDate(new Date()).toString());
         return new Date().getTime() + '000000';
     }
 
@@ -61,7 +59,6 @@ class Transaction {
             // tx.setIbtp(this.tx.getIbtp())
             tx.setNonce(this.tx.getNonce())
             tx.setAmount(this.tx.getAmount())
-            console.log(tx)
 
             return tx.serializeBinary()
         } else {
@@ -82,11 +79,8 @@ class Transaction {
     // Sign the Transaction
     async sign(privateKey) {
         let needHashString = this.needHashString();
-        console.log(needHashString)
         let unHashedString = Buffer.from(needHashString);
         let hashedString = sha256.digest(needHashString);
-        console.log(Buffer.from(hashedString).length)
-        console.log(Buffer.from(hashedString))
 
         let ec = new EC('secp256k1');
         let keyPair = ec.keyFromPrivate(privateKey, 'hex');

@@ -11,7 +11,7 @@ message Transaction {
     bytes payload = 6;
     IBTP IBTP = 7;
     uint64 nonce = 8 [jstype = JS_STRING];
-    string amount  = 9;
+    uint64 amount  = 9 [jstype = JS_STRING];
     bytes signature = 10;
     bytes extra = 11;
 }
@@ -22,7 +22,7 @@ message ContractTransaction {
     int64 timestamp = 4 [jstype = JS_STRING];
     bytes payload = 6;
     uint64 nonce = 8 [jstype = JS_STRING];
-    string amount  = 9;
+    uint64 amount  = 9 [jstype = JS_STRING];
 }
 
 message IBTPTransaction {
@@ -31,7 +31,7 @@ message IBTPTransaction {
     int64 timestamp = 4 [jstype = JS_STRING];
     IBTP IBTP = 7;
     uint64 nonce = 8 [jstype = JS_STRING];
-    string amount  = 9;
+    uint64 amount  = 9 [jstype = JS_STRING];
 }
 
 message Address {
