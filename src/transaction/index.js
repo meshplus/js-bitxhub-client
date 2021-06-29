@@ -20,12 +20,10 @@ class Transaction {
         this.tx.setIbtp(ibtp);
         this.tx.setAmount("111");
         this.tx.setExtra("");
-        console.log(this.tx.getPayload() === "");
     }
 
     // Get The Current Time Stamp in Nanoseconds
     getCurrentTimeStamp() {
-        console.log(Timestamp.fromDate(new Date()).toString());
         return new Date().getTime() + '000000';
     }
 
@@ -61,7 +59,6 @@ class Transaction {
             // tx.setIbtp(this.tx.getIbtp())
             tx.setNonce(this.tx.getNonce())
             tx.setAmount(this.tx.getAmount())
-            console.log(tx)
 
             return tx.serializeBinary()
         } else {
@@ -79,14 +76,43 @@ class Transaction {
         }
     }
 
+    // Transform Transaction to a String
+    metaHashString() {
+        if (this.tx.getPayload() !== "") {
+            let tx = new pb.ContractTransaction()
+            let from = new Uint8Array(hexToArrayBuffer(this.tx.getFrom().slice(2)))
+            let to = new Uint8Array(hexToArrayBuffer(this.tx.getTo().slice(2)))
+            tx.setFrom(from)
+            tx.setTo(to)
+            tx.setTimestamp(this.tx.getTimestamp())
+            tx.setPayload(this.tx.getPayload())
+            // tx.setIbtp(this.tx.getIbtp())
+            tx.setNonce(this.tx.getNonce())
+            tx.setAmount(this.tx.getAmount())
+            tx.setTyp(1)
+
+            return Buffer.from(tx.serializeBinary())
+        } else {
+            let tx = new pb.IBTPTransaction()
+            let from = new Uint8Array(hexToArrayBuffer(this.tx.getFrom().slice(2)))
+            let to = new Uint8Array(hexToArrayBuffer(this.tx.getTo().slice(2)))
+            tx.setFrom(from)
+            tx.setTo(to)
+            tx.setTimestamp(this.tx.getTimestamp())
+            tx.setIbtp(this.tx.getIbtp())
+            tx.setNonce(this.tx.getNonce())
+            tx.setAmount(this.tx.getAmount())
+            tx.setTyp(1)
+
+            return Buffer.from(tx.serializeBinary())
+        }
+    }
+
     // Sign the Transaction
     async sign(privateKey) {
         let needHashString = this.needHashString();
-        console.log(needHashString)
         let unHashedString = Buffer.from(needHashString);
         let hashedString = sha256.digest(needHashString);
-        console.log(Buffer.from(hashedString).length)
-        console.log(Buffer.from(hashedString))
 
         let ec = new EC('secp256k1');
         let keyPair = ec.keyFromPrivate(privateKey, 'hex');

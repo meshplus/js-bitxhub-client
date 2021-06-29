@@ -53,6 +53,13 @@ async function sendTransactionWithReceipt(transaction) {
     return res;
 }
 
+// Send View & Get Receipt
+async function sendViewWithReceipt(transaction) {
+    let res = await this.sendView(transaction);
+
+    return res;
+}
+
 // Get Receipt by Hash
 async function getReceipt(hash) {
     let optObj = await rpc.setOptions('get', '/v1/receipt/' + hash);
@@ -83,7 +90,9 @@ function atob(str) {
 
 module.exports = {
     sendTX,
+    sendView,
     sendTransactionWithReceipt,
+    sendViewWithReceipt,
     getReceipt,
     getPendingNonce,
     getChainMeta,
