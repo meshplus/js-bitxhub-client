@@ -12,6 +12,12 @@ function pbInt64(i) {
     param.setValue(Buffer.from(i.toString()));
     return param;
 }
+function pbUInt64(i) {
+    let param = new pb.Arg();
+    param.setType(pb.Arg.Type.U64);
+    param.setValue(Buffer.from(i.toString()));
+    return param;
+}
 function pbString(i) {
     let param = new pb.Arg();
     param.setType(pb.Arg.Type.STRING);
@@ -28,6 +34,7 @@ function pbBytes(i) {
 module.exports = {
     pbInt32,
     pbInt64,
+    pbUInt64,
     pbString,
     pbBytes
 };
