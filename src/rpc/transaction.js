@@ -70,8 +70,8 @@ async function getReceipt(hash) {
 async function getTransaction(hash) {
     let optObj = await rpc.setOptions('get', '/v1/transaction/' + hash);
     let res = await rpc.doRequest(optObj);
-    if (res.tx_meta) {
-        res.tx_meta.block_hash = '0x' + b64DecodeUnicode(res.tx_meta.block_hash)
+    if (res.tx_meta[0]) {
+        res.tx_meta[0].block_hash = '0x' + b64DecodeUnicode(res.tx_meta[0].block_hash)
     }
     return res;
 }
