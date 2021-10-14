@@ -12,9 +12,27 @@ function pbInt64(i) {
     param.setValue(Buffer.from(i.toString()));
     return param;
 }
+function pbUInt32(i) {
+    let param = new pb.Arg();
+    param.setType(pb.Arg.Type.U32);
+    param.setValue(Buffer.from(i.toString()));
+    return param;
+}
 function pbUInt64(i) {
     let param = new pb.Arg();
     param.setType(pb.Arg.Type.U64);
+    param.setValue(Buffer.from(i.toString()));
+    return param;
+}
+function pbFloat32(i) {
+    let param = new pb.Arg();
+    param.setType(pb.Arg.Type.F32);
+    param.setValue(Buffer.from(i.toString()));
+    return param;
+}
+function pbFloat64(i) {
+    let param = new pb.Arg();
+    param.setType(pb.Arg.Type.F64);
     param.setValue(Buffer.from(i.toString()));
     return param;
 }
@@ -34,7 +52,10 @@ function pbBytes(i) {
 module.exports = {
     pbInt32,
     pbInt64,
+    pbUInt32,
     pbUInt64,
+    pbFloat32,
+    pbFloat64,
     pbString,
     pbBytes
 };
