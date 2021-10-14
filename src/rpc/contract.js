@@ -1,6 +1,8 @@
 const pb = require('./transaction_pb');
 const Transaction = require('../transaction/index');
 const utils = require('web3-utils');
+const sha256 = require('js-sha256');
+const keccak256 = require('keccak256');
 
 
 async function deployContract(contract) {
@@ -25,6 +27,40 @@ async function deployContract(contract) {
     if (receipt.ret) {
         let buffer = Buffer.from(receipt.ret, 'base64');
         return utils.toChecksumAddress(utils.bytesToHex(buffer));
+    }
+    return '';
+}
+
+async function deployMetaContract(tx, signature) {
+    const cli = this;
+
+    let metaTx = tx;
+    metaTx.setSignature(fromHexString(signature.slice(2)));
+    metaTx.setTyp(1);
+    let transaction = metaTx.toObject();
+    delete transaction.transactionHash;
+
+    let receipt = await cli.SendTransactionWithReceipt(transaction);
+    if (receipt.ret) {
+        let buffer = Buffer.from(receipt.ret, 'base64');
+        return utils.toChecksumAddress(utils.bytesToHex(buffer));
+    }
+    return '';
+}
+
+async function invokeMetaContract(tx, signature) {
+    const cli = this;
+
+    let metaTx = tx;
+    metaTx.setSignature(fromHexString(signature.slice(2)));
+    metaTx.setTyp(1);
+    let transaction = metaTx.toObject();
+    delete transaction.transactionHash;
+
+    let receipt = await cli.SendTransactionWithReceipt(transaction);
+    if (receipt.ret) {
+        let buffer = Buffer.from(receipt.ret, 'base64');
+        return buffer.toString();
     }
     return '';
 }
@@ -60,6 +96,77 @@ async function invokeContract(vmType, address, method, ...args) {
     return '';
 }
 
+async function invokeMetaView(tx, signature) {
+    const cli = this;
+
+    let metaTx = tx;
+    metaTx.setSignature(fromHexString(signature.slice(2)));
+    metaTx.setTyp(1);
+    let transaction = metaTx.toObject();
+    delete transaction.transactionHash;
+
+    console.log(transaction)
+    let receipt = await cli.SendViewWithReceipt(transaction);
+    if (receipt.ret) {
+        let buffer = Buffer.from(receipt.ret, 'base64');
+        return buffer.toString();
+    }
+    return '';
+}
+
+async function invokeView(vmType, address, method, ...args) {
+    const cli = this;
+
+    let ip = new pb.InvokePayload();
+    ip.setMethod(method);
+    ip.setArgsList(args);
+
+    let payload = ip.serializeBinary();
+    let td = new pb.TransactionData();
+    td.setType(pb.TransactionData.Type.INVOKE);
+    td.setVmType(vmType);
+    td.setPayload(payload);
+
+    let tx = new Transaction();
+    tx.tx.setFrom("0x" + this.address);
+    tx.tx.setTo("0x" + address);
+    tx.tx.setPayload(td.serializeBinary());
+    nonce = await cli.GetPendingNonce();
+    tx.tx.setNonce(nonce);
+    await tx.sign(cli.privateKey);
+    let transaction = tx.tx.toObject();
+    delete transaction.transactionHash;
+
+    let receipt = await cli.SendViewWithReceipt(transaction);
+    if (receipt.ret) {
+        let buffer = Buffer.from(receipt.ret, 'base64');
+        return buffer.toString();
+    }
+    return '';
+}
+
+async function getHashString(vmType, address, method, ...args) {
+    const cli = this;
+
+    let ip = new pb.InvokePayload();
+    ip.setMethod(method);
+    ip.setArgsList(args);
+
+    let payload = ip.serializeBinary();
+    let td = new pb.TransactionData();
+    td.setType(pb.TransactionData.Type.INVOKE);
+    td.setVmType(vmType);
+    td.setPayload(payload);
+
+    let tx = new Transaction();
+    tx.tx.setFrom(this.metaAddress);
+    tx.tx.setTo("0x" + address);
+    tx.tx.setPayload(td.serializeBinary());
+    nonce = await cli.GetMetaPendingNonce();
+    tx.tx.setNonce(nonce);
+    return [tx.tx, keccak256(tx.metaHashString()).toString('hex')];
+}
+
 // Decode from base64 and Convert from utf8 to utf-16
 function b64DecodeUnicode(str) {
     return decodeURIComponent(atob(str).split('').map(function (c) {
@@ -80,7 +187,23 @@ function strToHexCharCode(str) {
     return hexCharCode.join("");
 }
 
+function uint8ArrayToString(fileData) {
+    var dataString = "";
+    for (var i = 0; i < fileData.length; i++) {
+        dataString += String.fromCharCode(fileData[i]);
+    }
+    return dataString
+}
+
+const fromHexString = hexString =>
+    new Uint8Array(hexString.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
+
 module.exports = {
     deployContract,
-    invokeContract
+    deployMetaContract,
+    invokeContract,
+    invokeMetaContract,
+    invokeView,
+    invokeMetaView,
+    getHashString,
 };

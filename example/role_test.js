@@ -1,7 +1,7 @@
 const { AES, Client, PbType } = require('../index');
 const fs = require('fs');
 const hexToArrayBuffer = require('hex-to-array-buffer');
-const utils  = require("web3-utils");
+const utils = require("web3-utils");
 
 async function test_register() {
 
@@ -31,9 +31,7 @@ async function test_login() {
 
     try {
         let cli = new Client(decrypted);
-        let ret = await cli.GetNewBlocks(8);
-        console.log(ret);
-        let receipt = await cli.InvokeContract(0, '000000000000000000000000000000000000000e', 'CountApprovedAppchains')
+        let receipt = await cli.InvokeView(0, '000000000000000000000000000000000000000d', 'GetRole')
         console.log('test_login ---', receipt)
     } catch (err) {
         console.log(err)

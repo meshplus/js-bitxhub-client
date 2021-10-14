@@ -478,6 +478,7 @@ proto.rpc.Transaction.toObject = function(includeInstance, msg) {
     ibtp: (f = msg.getIbtp()) && proto.rpc.IBTP.toObject(includeInstance, f),
     nonce: jspb.Message.getFieldWithDefault(msg, 8, "0"),
     amount: jspb.Message.getFieldWithDefault(msg, 9, ""),
+    typ: jspb.Message.getFieldWithDefault(msg, 10, 0),
     signature: msg.getSignature_asB64(),
     extra: msg.getExtra_asB64()
   };
@@ -554,10 +555,14 @@ proto.rpc.Transaction.deserializeBinaryFromReader = function(msg, reader) {
       msg.setAmount(value);
       break;
     case 10:
+      var value = /** @type {number} */ (reader.readUint32());
+      msg.setTyp(value);
+      break;
+    case 11:
       var value = /** @type {!Uint8Array} */ (reader.readBytes());
       msg.setSignature(value);
       break;
-    case 11:
+    case 12:
       var value = /** @type {!Uint8Array} */ (reader.readBytes());
       msg.setExtra(value);
       break;
@@ -654,17 +659,24 @@ proto.rpc.Transaction.serializeBinaryToWriter = function(message, writer) {
       f
     );
   }
+  f = message.getTyp();
+  if (f !== 0) {
+    writer.writeUint32(
+      10,
+      f
+    );
+  }
   f = message.getSignature_asU8();
   if (f.length > 0) {
     writer.writeBytes(
-      10,
+      11,
       f
     );
   }
   f = message.getExtra_asU8();
   if (f.length > 0) {
     writer.writeBytes(
-      11,
+      12,
       f
     );
   }
@@ -973,16 +985,34 @@ proto.rpc.Transaction.prototype.setAmount = function(value) {
 
 
 /**
- * optional bytes signature = 10;
- * @return {!(string|Uint8Array)}
+ * optional uint32 typ = 10;
+ * @return {number}
  */
-proto.rpc.Transaction.prototype.getSignature = function() {
-  return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 10, ""));
+proto.rpc.Transaction.prototype.getTyp = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 10, 0));
 };
 
 
 /**
- * optional bytes signature = 10;
+ * @param {number} value
+ * @return {!proto.rpc.Transaction} returns this
+ */
+proto.rpc.Transaction.prototype.setTyp = function(value) {
+  return jspb.Message.setProto3IntField(this, 10, value);
+};
+
+
+/**
+ * optional bytes signature = 11;
+ * @return {!(string|Uint8Array)}
+ */
+proto.rpc.Transaction.prototype.getSignature = function() {
+  return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 11, ""));
+};
+
+
+/**
+ * optional bytes signature = 11;
  * This is a type-conversion wrapper around `getSignature()`
  * @return {string}
  */
@@ -993,7 +1023,7 @@ proto.rpc.Transaction.prototype.getSignature_asB64 = function() {
 
 
 /**
- * optional bytes signature = 10;
+ * optional bytes signature = 11;
  * Note that Uint8Array is not supported on all browsers.
  * @see http://caniuse.com/Uint8Array
  * This is a type-conversion wrapper around `getSignature()`
@@ -1010,21 +1040,21 @@ proto.rpc.Transaction.prototype.getSignature_asU8 = function() {
  * @return {!proto.rpc.Transaction} returns this
  */
 proto.rpc.Transaction.prototype.setSignature = function(value) {
-  return jspb.Message.setProto3BytesField(this, 10, value);
+  return jspb.Message.setProto3BytesField(this, 11, value);
 };
 
 
 /**
- * optional bytes extra = 11;
+ * optional bytes extra = 12;
  * @return {!(string|Uint8Array)}
  */
 proto.rpc.Transaction.prototype.getExtra = function() {
-  return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 11, ""));
+  return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 12, ""));
 };
 
 
 /**
- * optional bytes extra = 11;
+ * optional bytes extra = 12;
  * This is a type-conversion wrapper around `getExtra()`
  * @return {string}
  */
@@ -1035,7 +1065,7 @@ proto.rpc.Transaction.prototype.getExtra_asB64 = function() {
 
 
 /**
- * optional bytes extra = 11;
+ * optional bytes extra = 12;
  * Note that Uint8Array is not supported on all browsers.
  * @see http://caniuse.com/Uint8Array
  * This is a type-conversion wrapper around `getExtra()`
@@ -1052,7 +1082,7 @@ proto.rpc.Transaction.prototype.getExtra_asU8 = function() {
  * @return {!proto.rpc.Transaction} returns this
  */
 proto.rpc.Transaction.prototype.setExtra = function(value) {
-  return jspb.Message.setProto3BytesField(this, 11, value);
+  return jspb.Message.setProto3BytesField(this, 12, value);
 };
 
 
@@ -1093,7 +1123,8 @@ proto.rpc.ContractTransaction.toObject = function(includeInstance, msg) {
     timestamp: jspb.Message.getFieldWithDefault(msg, 4, "0"),
     payload: msg.getPayload_asB64(),
     nonce: jspb.Message.getFieldWithDefault(msg, 8, "0"),
-    amount: jspb.Message.getFieldWithDefault(msg, 9, "")
+    amount: jspb.Message.getFieldWithDefault(msg, 9, ""),
+    typ: jspb.Message.getFieldWithDefault(msg, 10, 0)
   };
 
   if (includeInstance) {
@@ -1153,6 +1184,10 @@ proto.rpc.ContractTransaction.deserializeBinaryFromReader = function(msg, reader
     case 9:
       var value = /** @type {string} */ (reader.readString());
       msg.setAmount(value);
+      break;
+    case 10:
+      var value = /** @type {number} */ (reader.readUint32());
+      msg.setTyp(value);
       break;
     default:
       reader.skipField();
@@ -1222,6 +1257,13 @@ proto.rpc.ContractTransaction.serializeBinaryToWriter = function(message, writer
   if (f.length > 0) {
     writer.writeString(
       9,
+      f
+    );
+  }
+  f = message.getTyp();
+  if (f !== 0) {
+    writer.writeUint32(
+      10,
       f
     );
   }
@@ -1408,6 +1450,24 @@ proto.rpc.ContractTransaction.prototype.setAmount = function(value) {
 };
 
 
+/**
+ * optional uint32 typ = 10;
+ * @return {number}
+ */
+proto.rpc.ContractTransaction.prototype.getTyp = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 10, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.rpc.ContractTransaction} returns this
+ */
+proto.rpc.ContractTransaction.prototype.setTyp = function(value) {
+  return jspb.Message.setProto3IntField(this, 10, value);
+};
+
+
 
 
 
@@ -1445,7 +1505,8 @@ proto.rpc.IBTPTransaction.toObject = function(includeInstance, msg) {
     timestamp: jspb.Message.getFieldWithDefault(msg, 4, "0"),
     ibtp: (f = msg.getIbtp()) && proto.rpc.IBTP.toObject(includeInstance, f),
     nonce: jspb.Message.getFieldWithDefault(msg, 8, "0"),
-    amount: jspb.Message.getFieldWithDefault(msg, 9, "")
+    amount: jspb.Message.getFieldWithDefault(msg, 9, ""),
+    typ: jspb.Message.getFieldWithDefault(msg, 10, 0)
   };
 
   if (includeInstance) {
@@ -1506,6 +1567,10 @@ proto.rpc.IBTPTransaction.deserializeBinaryFromReader = function(msg, reader) {
     case 9:
       var value = /** @type {string} */ (reader.readString());
       msg.setAmount(value);
+      break;
+    case 10:
+      var value = /** @type {number} */ (reader.readUint32());
+      msg.setTyp(value);
       break;
     default:
       reader.skipField();
@@ -1576,6 +1641,13 @@ proto.rpc.IBTPTransaction.serializeBinaryToWriter = function(message, writer) {
   if (f.length > 0) {
     writer.writeString(
       9,
+      f
+    );
+  }
+  f = message.getTyp();
+  if (f !== 0) {
+    writer.writeUint32(
+      10,
       f
     );
   }
@@ -1754,6 +1826,24 @@ proto.rpc.IBTPTransaction.prototype.getAmount = function() {
  */
 proto.rpc.IBTPTransaction.prototype.setAmount = function(value) {
   return jspb.Message.setProto3StringField(this, 9, value);
+};
+
+
+/**
+ * optional uint32 typ = 10;
+ * @return {number}
+ */
+proto.rpc.IBTPTransaction.prototype.getTyp = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 10, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.rpc.IBTPTransaction} returns this
+ */
+proto.rpc.IBTPTransaction.prototype.setTyp = function(value) {
+  return jspb.Message.setProto3IntField(this, 10, value);
 };
 
 

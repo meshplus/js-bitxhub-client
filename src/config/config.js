@@ -1,5 +1,5 @@
 // Nodes
-let hosts = ['172.22.217.62'];
+let hosts = ['172.31.63.120'];
 let ports = [9091];
 
 function getHosts() {
