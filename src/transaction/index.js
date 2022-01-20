@@ -9,7 +9,7 @@ class Transaction {
         this.tx = new pb.Transaction();
         var ibtp = new pb.IBTP();
         var hash = new pb.Hash();
-        this.tx.setVersion("");
+        this.tx.setVersion("11");
         // this.tx.setTimestamp(1608332789316000000);
         this.tx.setTimestamp(this.getCurrentTimeStamp());
         this.tx.setNonce("111");
@@ -76,6 +76,31 @@ class Transaction {
         }
     }
 
+    needHashBytes() {
+        if (this.tx.getPayload() !== "") {
+            let tx = new pb.ContractTransaction()
+            tx.setFrom(this.tx.getFrom())
+            tx.setTo(this.tx.getTo())
+            tx.setTimestamp(this.tx.getTimestamp())
+            tx.setPayload(this.tx.getPayload())
+            // tx.setIbtp(this.tx.getIbtp())
+            tx.setNonce(this.tx.getNonce())
+            tx.setAmount(this.tx.getAmount())
+
+            return tx.serializeBinary()
+        } else {
+            let tx = new pb.IBTPTransaction()
+            tx.setFrom(this.tx.getFrom())
+            tx.setTo(this.tx.getTo())
+            tx.setTimestamp(this.tx.getTimestamp())
+            tx.setIbtp(this.tx.getIbtp())
+            tx.setNonce(this.tx.getNonce())
+            tx.setAmount(this.tx.getAmount())
+
+            return tx.serializeBinary()
+        }
+    }
+
     // Transform Transaction to a String
     metaHashString() {
         if (this.tx.getPayload() !== "") {
@@ -117,18 +142,32 @@ class Transaction {
         let ec = new EC('secp256k1');
         let keyPair = ec.keyFromPrivate(privateKey, 'hex');
         let signature = keyPair.sign(hashedString);
+        let typ = [3]
         let r = signature.r.toArray('be', 32);
         let s = signature.s.toArray('be', 32);
         let v = signature.recoveryParam;
-        let sig = new Uint8Array(r.concat(s).concat(v));
+        let sig = new Uint8Array(typ.concat(r).concat(s).concat(v));
         this.tx.setSignature(sig);
-        // let keyPub = keyPair.getPublic();
-        // let h = [0x04];
-        // let x = keyPub.getX().toArray('be', 32);
-        // let y = keyPub.getY().toArray('be', 32);
-        // let publicKey = h.concat(x).concat(y);
-        // this.signature = this.signature.concat(publicKey);
+    }
+
+    // Sign the Transaction
+    async byteSign(privateKey) {
+        let needHashString = this.needHashBytes();
+        let unHashedString = Buffer.from(needHashString);
+        let hashedString = sha256.digest(needHashString);
+
+        let ec = new EC('secp256k1');
+        let keyPair = ec.keyFromPrivate(privateKey, 'hex');
+        let signature = keyPair.sign(hashedString);
+        let typ = [3]
+        let r = signature.r.toArray('be', 32);
+        let s = signature.s.toArray('be', 32);
+        let v = signature.recoveryParam;
+        let sig = new Uint8Array(typ.concat(r).concat(s).concat(v));
+        this.tx.setSignature(sig);
     }
 }
+const toHexString = (bytes) =>
+  bytes.reduce((str, byte) => str + byte.toString(16).padStart(2, "0"), "");
 
 module.exports = Transaction;

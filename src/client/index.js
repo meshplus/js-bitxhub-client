@@ -70,17 +70,32 @@ class Client {
     InvokeContract(vmType, address, method, ...args) {
         return contract.invokeContract.call(this, vmType, address, method, ...args);
     }
+    GetDeployTx(ctx, nonce) {
+        return contract.getDeployTx.call(this, ctx, `${nonce}`);
+    }
+    GetInvokeTx(vmType, address, method, nonce, ...args) {
+        return contract.getInvokeTx.call(this, vmType, address, method, `${nonce}`, ...args);
+    }
     InvokeView(vmType, address, method, ...args) {
         return contract.invokeView.call(this, vmType, address, method, ...args);
     }
     GetHashString(vmType, address, method, ...args) {
         return contract.getHashString.call(this, vmType, address, method, ...args);
     }
+    GetHttpHashString(vmType, address, method, nonce, ...args) {
+        return contract.getHttpHashString.call(this, vmType, address, method, `${nonce}`, ...args);
+    }
+    GetHttpDeplayString(ctx, nonce) {
+        return contract.getHttpDeployString.call(this, ctx, `${nonce}`);
+    }
     DeployMetaContract(tx, signature) {
         return contract.deployMetaContract.call(this, tx, signature);
     }
     InvokeMetaContract(tx, signature) {
         return contract.invokeMetaContract.call(this, tx, signature);
+    }
+    GetInvokeMetaTx(tx, signature) {
+        return contract.getInvokeMetaTx.call(this, tx, signature);
     }
     InvokeMetaView(tx, signature) {
         return contract.invokeMetaView.call(this, tx, signature);

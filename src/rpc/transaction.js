@@ -38,6 +38,7 @@ async function getBlock(type, value) {
 // Send Transaction & Get Receipt
 async function sendTransactionWithReceipt(transaction) {
     let hash = await this.sendTX(transaction);
+    console.log(hash);
     let res = await this.getReceipt(hash.tx_hash);
     let start = new Date();
     let former = start;
